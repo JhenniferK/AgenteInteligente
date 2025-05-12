@@ -11,13 +11,15 @@ START = (0, 0)
 GOAL = (7, 7)
 
 OBSTACLES = [
-    (0, 1), (1, 1), (2, 1), (4, 1), (4, 2),
-    (3, 4), (4, 5), (5, 5), (6, 1), (7, 3),
-    (5, 4), (6, 6), (7, 6), (1, 3), (2, 4),
-    (0, 5), (2, 6)
+    (0, 1), (1, 1), (2, 1), (4, 1), 
+    (4, 2), (3, 4), (4, 5), (5, 5), 
+    (6, 1), (7, 3), (5, 4), (6, 6), 
+    (7, 6), (1, 3), (2, 4), (0, 5), (2, 6)
 ]
 
-TRAPS = [(0, 7), (2, 3), (3, 5), (4, 4), (5, 1), (7, 5)]  # Armadilhas
+TRAPS = [(0, 7), (2, 3), (3, 5), (4, 4), (5, 1), (7, 5)] 
+
+TELEPORTATION = [(0, 6), (7, 2)]
 
 ACTIONS = [(0, -1), (0, 1), (-1, 0), (1, 0)]  # Cima, baixo, esquerda, direita
 
@@ -36,7 +38,6 @@ BLUE = (50, 50, 255)
 GREEN = (0, 255, 0)
 RED = (255, 0, 0)
 ORANGE = (255, 165, 0)
-PURPLE = (160, 32, 240)  # Armadilhas
 
 # Q-table
 q_table = np.zeros((GRID_SIZE, GRID_SIZE, len(ACTIONS)))
@@ -53,7 +54,7 @@ def get_next_state(state, action):
 
 def get_reward(state, steps):
     if state == GOAL:
-        return 100 - steps  # Quanto menos passos, maior a recompensa
+        return 100 - steps  # quanto menos passos, maior vai ser a recompensa
     elif state in TRAPS:
         return -20
     elif state in OBSTACLES:
@@ -70,6 +71,8 @@ def draw_grid(screen):
                 screen.blit(obstacles_img, (x * CELL_SIZE, y * CELL_SIZE))
             elif (x, y) in TRAPS:
                 screen.blit(trap_img, (x * CELL_SIZE, y * CELL_SIZE))
+            elif (x, y) in TELEPORTATION:
+                screen.blit(teleportation_img, (x * CELL_SIZE, y * CELL_SIZE))
             elif (x, y) == START:
                 pygame.draw.rect(screen, GREEN, rect)
             elif (x, y) == GOAL:
@@ -99,6 +102,7 @@ def process_events():
 # -----------------------------
 # TREINAMENTO COM VISUALIZAÇÃO
 # -----------------------------
+
 pygame.init()
 pygame.font.init()
 font = pygame.font.SysFont('Arial', 24)
@@ -110,6 +114,8 @@ agent_img = pygame.image.load("Mario.png")
 agent_img = pygame.transform.scale(agent_img, (CELL_SIZE - 10, CELL_SIZE - 10))
 goal_img = pygame.image.load("Princesa.png")
 goal_img = pygame.transform.scale(goal_img, (CELL_SIZE, CELL_SIZE))
+teleportation_img = pygame.image.load("Tunel.png")
+teleportation_img = pygame.transform.scale(teleportation_img, (CELL_SIZE, CELL_SIZE))
 
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("Treinamento do Agente")
@@ -137,12 +143,15 @@ for episode in range(EPISODES):
 
         state = next_state
 
+        if state == (7, 2):
+            state = (0,6)
+        elif state == (0,6):
+            state = (7, 2)
+
         screen.fill(WHITE)
         draw_grid(screen)
         draw_agent(screen, state, img=agent_img)
-        draw_text(screen, f"Episódio: {episode + 1}", (10, 10), font)
-        draw_text(screen, f"Passos: {steps}", (10, 40), font)
-        draw_text(screen, f"Pontos: {p}", (), font)
+
         pygame.display.flip()
         clock.tick(45)
 
@@ -190,6 +199,14 @@ while running:
             else:
                 path.append(next_pos)
                 agent_pos = next_pos
+
+                if agent_pos == (7, 2):
+                    agent_pos = (0, 6)
+                    path.append(agent_pos)
+                elif agent_pos == (0, 6):
+                    agent_pos = (7, 2)
+                    path.append(agent_pos)
+
                 time.sleep(0.8)  # <-- controle de velocidade da execução
         else:
             reached_goal = True
