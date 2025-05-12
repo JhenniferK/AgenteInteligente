@@ -17,7 +17,7 @@ As variações desenvolvidas visam testar a flexibilidade e adaptabilidade do ag
 
 * Linguagem: `Python`
 * Lógica baseada em regras / busca / tomada de decisão
-* Ferramentas: Vs Code
+* Ferramentas: VS Code
 
 ### 📁 Como Executar
 
