@@ -26,8 +26,14 @@ As variações desenvolvidas visam testar a flexibilidade e adaptabilidade do ag
    ```bash
    git clone https://github.com/JhenniferK/AgenteInteligente.git
    ```
+
+2. Acesse o diretório do arquivo
+
+   ```bash
+   cd AgenteInteligente
+   ```
    
-2. Execute o arquivo principal:
+3. Execute o arquivo principal:
 
    ```bash
    python AgenteInteligente.py
