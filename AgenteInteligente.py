@@ -66,6 +66,8 @@ def draw_grid(screen):
     for x in range(GRID_SIZE):
         for y in range(GRID_SIZE):
             rect = pygame.Rect(x * CELL_SIZE, y * CELL_SIZE, CELL_SIZE, CELL_SIZE)
+
+            screen.blit(sky_img, (x * CELL_SIZE, y * CELL_SIZE))
             
             if (x, y) in OBSTACLES:
                 screen.blit(obstacles_img, (x * CELL_SIZE, y * CELL_SIZE))
@@ -116,6 +118,8 @@ goal_img = pygame.image.load("Princesa.png")
 goal_img = pygame.transform.scale(goal_img, (CELL_SIZE, CELL_SIZE))
 teleportation_img = pygame.image.load("Tunel.png")
 teleportation_img = pygame.transform.scale(teleportation_img, (CELL_SIZE, CELL_SIZE))
+sky_img = pygame.image.load("Céu.png")
+sky_img = pygame.transform.scale(sky_img, (CELL_SIZE, CELL_SIZE))
 
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("Treinamento do Agente")
