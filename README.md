@@ -1,4 +1,4 @@
-## 🧠 Agente Inteligente – Projeto Acadêmico
+## 🧠 Agente Inteligente
 
 ### Descrição
 
